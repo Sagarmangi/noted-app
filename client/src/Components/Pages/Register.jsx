@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify'
 import "react-toastify/dist/ReactToastify.css"
-import Header from '../Header'
 import axios from 'axios'
 
 export default function Register() {
+  const navigate = useNavigate();
     const [values, setValues] = useState({
         firstName: "",
         lastName: "",
@@ -32,6 +32,7 @@ export default function Register() {
                 if (email) generateError(email);
                 else if (password) generateError(password);
                 } else {
+                  navigate("/");
                 }
             }
         } catch (ex) {
@@ -41,7 +42,6 @@ export default function Register() {
 
   return (
     <>
-    <Header/>
     <div className="text-center form-signin w-100 m-auto">
       <form onSubmit={e => handleSubmit(e)} className="form-register">
         <h1 className="h1 form-heading mb-3 fw-normal">Register</h1>

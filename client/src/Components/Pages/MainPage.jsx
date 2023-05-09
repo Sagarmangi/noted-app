@@ -1,17 +1,39 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Header from '../Header';
-import Footer from '../Footer';
 import CreateArea from '../CreateArea';
 import Note from '../Note';
+import Footer from '../Footer';
+import { useNavigate } from "react-router-dom"
+import {useCookies} from "react-cookie"
+import axios from "axios";
+import { ToastContainer, toast } from 'react-toastify'
+import "react-toastify/dist/ReactToastify.css"
 
 
 export default function MainPage() {
-    const [notes, setNotes] = useState([]);
+  const navigate = useNavigate();
+  const [notes, setNotes] = useState([]);
+  const [cookies, removeCookie] = useCookies([])
+  useEffect(() => {
+    const verifyUser= async () => {
+      if (!cookies.jwt) {
+        navigate("/login");
+      } else {
+            const {data} = await axios.post("http://localhost:8080/", {}, {withCredentials:true})
+            if (!data.status) {
+              removeCookie("jwt")
+              navigate("/login")
+            } else toast(`Hi ${data.firstName}`, {theme: "light"})
+      }
+    }
+    verifyUser();
+  }, [cookies, navigate, removeCookie]);
 
-    function addNote(newNote) {
+  function addNote(newNote) {
     setNotes((prevNotes) => {
       return [...prevNotes, newNote];
     });
+
   }
 
   function deleteNote(id) {
@@ -22,9 +44,14 @@ export default function MainPage() {
     });
   }
 
+   const logOut = () => {
+    removeCookie("jwt");
+    navigate("/login");
+  }
+
   return (
     <div>
-        <Header />
+        <Header onLogOut={logOut} />
         <CreateArea onAdd={addNote} />
         {notes.map((noteItem, index) => {
             return (
@@ -38,6 +65,7 @@ export default function MainPage() {
             );
           })}
         <Footer />
+        <ToastContainer/>
     </div>
   )
 }

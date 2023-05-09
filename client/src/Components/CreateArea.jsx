@@ -26,21 +26,30 @@ function CreateArea(props) {
     event.preventDefault();
   }
 
-  function submitNote(event) {
+  const submitNote = async e => {
+    e.preventDefault();
     props.onAdd(note);
-    axios.post("http://localhost:8080/", note);
-    window.location = "/";
+
+    try {
+      const {data} = await axios.post("http://localhost:8080/", {
+                ...note
+            }, {
+                withCredentials: true
+            })
+    } catch (err) {
+      console.log(err);
+    }
+    
     setNote({
       title: "",
       content: "",
     });
     
-    event.preventDefault();
   }
 
   return (
     <div>
-      <form className="create-note">
+      <form onSubmit={(e) => submitNote(e)} className="create-note">
         {noteExpand && (
           <input
             name="title"
@@ -59,7 +68,7 @@ function CreateArea(props) {
           rows={noteExpand ? 3 : 1}
         />
         <Zoom in={noteExpand}>
-          <Fab type="button" onClick={submitNote}>
+          <Fab type="submit">
             <AddCircleOutlineIcon />
           </Fab>
         </Zoom>
