@@ -46,8 +46,6 @@ module.exports.setNotes = (req, res, next) => {
 module.exports.deleteNotes = (req, res, next) => {
     const token = req.cookies.jwt;
     const id = req.params.id;
-    console.log(token)
-    console.log(id)
     if (token) {
         jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
             if (err) {
