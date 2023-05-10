@@ -33,7 +33,7 @@ module.exports.setNotes = (req, res, next) => {
                 res.json({err})
                 next();
             } else {
-                const foundUser = await User.findOne({_id: decodedToken.id})
+                let foundUser = await User.findOne({_id: decodedToken.id})
                 foundUser.notes.push({title, content})
                 await foundUser.save();
                 res.json({notes: foundUser.notes})
@@ -46,6 +46,8 @@ module.exports.setNotes = (req, res, next) => {
 module.exports.deleteNotes = (req, res, next) => {
     const token = req.cookies.jwt;
     const id = req.params.id;
+    console.log(token)
+    console.log(id)
     if (token) {
         jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
             if (err) {
@@ -54,7 +56,7 @@ module.exports.deleteNotes = (req, res, next) => {
             } else {
                 const foundUser = await User.findOne({_id: decodedToken.id})
                 foundUser.notes.pull(id)
-                await foundUser.save();
+                await foundUser.save()
                 res.json({notes: foundUser.notes})
                 next();
             }

@@ -28,7 +28,7 @@ function CreateArea(props) {
 
   const submitNote = async e => {
     e.preventDefault();
-    props.onAdd(note);
+    // props.onAdd(note);
 
     try {
       const {data} = await axios.post("http://localhost:8080/post", {...note}, {withCredentials:true})

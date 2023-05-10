@@ -38,9 +38,10 @@ export default function MainPage() {
   }, [cookies, navigate, removeCookie]);
 
   const addNote = async (newNote) => {
-    setNotes((prevNotes) => {
-      return [...prevNotes, newNote];
-    });
+    // setNotes((prevNotes) => {
+    //   return [...prevNotes, newNote];
+    // });
+    setNotes(newNote)
   }
 
   const deleteNote = async (id) => {
