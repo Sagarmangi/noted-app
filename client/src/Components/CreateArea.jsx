@@ -28,7 +28,6 @@ function CreateArea(props) {
 
   const submitNote = async e => {
     e.preventDefault();
-    // props.onAdd(note);
 
     try {
       const {data} = await axios.post("http://localhost:8080/post", {...note}, {withCredentials:true})
@@ -37,6 +36,7 @@ function CreateArea(props) {
           title: "",
           content: ""
         });
+        setNoteExpand(false)
         props.onAdd(data.notes)
       } else {
         setNote({
