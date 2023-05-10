@@ -100,9 +100,9 @@ export default function Register() {
         >
          Register
         </button>
-        <span>
+        <div className='form-button'>
             Already have an account? <Link to="/login">Login</Link>
-        </span>
+        </div>
       </form>
     </div>
     <ToastContainer/>

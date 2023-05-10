@@ -14,34 +14,44 @@ export default function MainPage() {
   const navigate = useNavigate();
   const [notes, setNotes] = useState([]);
   const [cookies, removeCookie] = useCookies([])
+
   useEffect(() => {
-    const verifyUser= async () => {
+    const verifyUser = async () => {
       if (!cookies.jwt) {
         navigate("/login");
       } else {
-            const {data} = await axios.post("http://localhost:8080/", {}, {withCredentials:true})
-            if (!data.status) {
-              removeCookie("jwt")
-              navigate("/login")
-            } else toast(`Hi ${data.firstName}`, {theme: "light"})
+        try {
+          const {data} = await axios.post("http://localhost:8080/", {}, {withCredentials:true})
+          if (!data.status) {
+            removeCookie("jwt")
+            navigate("/login")
+          } else {
+            toast(`Hi ${data.firstName}`, {theme: "light"})
+            setNotes(data.notes)
+          }
+        } catch (err) {
+          console.log(err);
+        }
       }
-    }
+    };
     verifyUser();
   }, [cookies, navigate, removeCookie]);
 
-  function addNote(newNote) {
+  const addNote = async (newNote) => {
     setNotes((prevNotes) => {
       return [...prevNotes, newNote];
     });
-
   }
 
-  function deleteNote(id) {
-    setNotes((prevNotes) => {
-      return prevNotes.filter((noteItem, index) => {
-        return index !== id;
-      });
-    });
+  const deleteNote = async (id) => {
+    try {
+      const {data} = await axios.delete(`http://localhost:8080/${id}`, {withCredentials:true})
+      if (data) {
+        setNotes(data.notes);
+      }
+    } catch (err) {
+      console.log(err);
+    }
   }
 
    const logOut = () => {

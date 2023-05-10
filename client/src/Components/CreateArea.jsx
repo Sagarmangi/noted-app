@@ -31,19 +31,27 @@ function CreateArea(props) {
     props.onAdd(note);
 
     try {
-      const {data} = await axios.post("http://localhost:8080/", {
-                ...note
-            }, {
-                withCredentials: true
-            })
+      const {data} = await axios.post("http://localhost:8080/post", {...note}, {withCredentials:true})
+      if (data) {
+        setNote({
+          title: "",
+          content: ""
+        });
+        props.onAdd(data.notes)
+      } else {
+        setNote({
+          title: "",
+          content: ""
+        });
+      }
     } catch (err) {
       console.log(err);
     }
-    
     setNote({
       title: "",
-      content: "",
+      content: ""
     });
+    
     
   }
 

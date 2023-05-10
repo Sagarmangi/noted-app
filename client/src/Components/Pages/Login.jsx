@@ -75,9 +75,9 @@ export default function Login() {
         >
           Sign In
         </button>
-        <span>
+        <div className="form-button">
             Don't have an account? <Link to="/register">Register</Link>
-        </span>
+        </div>
       </form>
     </div>
     <ToastContainer/>
